@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whish × Polygon - Cross-Chain Stablecoin Demo</title>
+<meta name="description" content="An interactive walkthrough of the Whish Coin app powered by Polygon's Open Money Stack - cross-chain stablecoin receive, virtual accounts, and SWIFT payouts for the Lebanese diaspora.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Whish × Polygon - Cross-Chain Stablecoin Demo">
+<meta property="og:description" content="One single new piece. The rest is already running. Interactive demo of the Whish Coin app on Polygon's Open Money Stack.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#E91E4F">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E91E4F'/%3E%3Ctext x='50%25' y='50%25' dy='.35em' text-anchor='middle' fill='white' font-family='Helvetica' font-weight='700' font-size='36'%3EW%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --polygon: #8247E5;
+    --polygon-light: #E9E0FF;
+    --polygon-soft: #F5F1FF;
+    --polygon-dark: #4B1FA8;
+    --whish: #E91E4F;
+    --whish-deep: #C81545;
+    --whish-light: #FCE4EC;
+    --whish-gradient: linear-gradient(135deg, #E91E4F 0%, #FF3C6F 100%);
+    --anchorage: #2D2D2D;
+    --anchorage-light: #E8E8E8;
+    --navy: #0B1437;
+    --ink: #1A2138;
+    --muted: #6B7280;
+    --line: #E5E7EB;
+    --line-soft: #F1F1F4;
+    --bg: #F8F7FA;
+    --white: #FFFFFF;
+    --success: #10B981;
+    --success-light: #D1FAE5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  /* TOP BANNER */
+  .top-banner {
+    background: white;
+    border-bottom: 1px solid var(--line);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand-marks {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .brand-divider { color: var(--muted); font-weight: 400; }
+  .brand-polygon { color: var(--polygon); }
+  .brand-whish { color: var(--whish); }
+  .version-tag {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* MAIN LAYOUT */
+  .page-wrap { max-width: 1280px; margin: 0 auto; padding: 56px 40px 80px; }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  /* PHONE */
+  .phone-wrap { display: flex; justify-content: center; position: sticky; top: 40px; }
+  .phone {
+    width: 300px;
+    background: var(--ink);
+    border-radius: 42px;
+    padding: 11px;
+    position: relative;
+  }
+  .phone-screen {
+    background: white;
+    border-radius: 32px;
+    overflow: hidden;
+    aspect-ratio: 9 / 19.5;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .notch {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 24px;
+    background: var(--ink);
+    border-radius: 14px;
+    z-index: 10;
+  }
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 24px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .screen-header {
+    padding: 6px 18px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .screen-back {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #F5F5F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .screen-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    flex: 1;
+    text-align: center;
+    margin-right: 28px;
+  }
+  .screen-body {
+    flex: 1;
+    padding: 18px;
+    overflow: hidden;
+  }
+
+  /* HOME SCREEN ELEMENTS */
+  .home-greeting {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .home-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .balance-card {
+    background: var(--whish-gradient);
+    border-radius: 20px;
+    padding: 18px;
+    color: white;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .balance-label {
+    font-size: 11px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+  }
+  .balance-amount {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+  }
+  .balance-sub {
+    font-size: 9px;
+    opacity: 0.8;
+    margin-bottom: 14px;
+  }
+  .home-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .home-action {
+    background: white;
+    color: var(--whish);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .home-action-icon {
+    font-size: 16px;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .activity-section {
+    margin-top: 4px;
+  }
+  .activity-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+  }
+  .activity-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .activity-row:last-child { border-bottom: none; }
+  .activity-icon {
+    width: 32px;
+    height: 32px;
+    background: #F5F5F7;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .activity-icon.btc { background: #FEF3C7; color: #92400E; }
+  .activity-icon.eth { background: #DBEAFE; color: #1E40AF; }
+  .activity-icon.wusd { background: var(--whish-light); color: var(--whish); }
+  .activity-text { flex: 1; }
+  .activity-title { font-size: 11px; font-weight: 600; color: var(--ink); }
+  .activity-meta { font-size: 9px; color: var(--muted); margin-top: 1px; }
+  .activity-amount { font-size: 12px; font-weight: 700; color: var(--success); }
+  .activity-amount.neutral { color: var(--muted); }
+
+  /* MENU LIST (Add Money / Send Money) */
+  .menu-prompt {
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .menu-prompt strong { font-weight: 700; }
+  .menu-group {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin: 12px 4px 6px;
+  }
+  .menu-group:first-child { margin-top: 0; }
+  .menu-item {
+    background: #F9F9FB;
+    border-radius: 14px;
+    padding: 11px 14px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .menu-item-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--whish-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .menu-item-text { flex: 1; }
+  .menu-item-title { font-size: 11px; font-weight: 600; color: var(--ink); }
+  .menu-item-sub { font-size: 9px; color: var(--muted); margin-top: 1px; }
+  .menu-item-arrow { color: var(--muted); font-size: 14px; }
+  .menu-item.future .menu-item-icon { background: #E5E7EB; color: var(--muted); }
+  .menu-item.future .menu-item-title { color: var(--muted); }
+  .menu-item-badge {
+    background: var(--polygon-light);
+    color: var(--polygon-dark);
+    font-size: 8px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* RECEIVE ADDRESS SCREEN */
+  .receive-prompt {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .receive-prompt strong { color: var(--ink); font-weight: 700; }
+  .address-card {
+    background: #F9F9FB;
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .address-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .address-copy {
+    font-size: 10px;
+    color: var(--polygon);
+    font-weight: 600;
+    margin-top: 6px;
+    cursor: pointer;
+  }
+  .qr-mini {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 12px;
+    background:
+      linear-gradient(45deg, var(--ink) 25%, transparent 25%) 0 0/10px 10px,
+      linear-gradient(-45deg, var(--ink) 25%, transparent 25%) 0 0/10px 10px,
+      linear-gradient(45deg, transparent 75%, var(--ink) 75%) 0 0/10px 10px,
+      linear-gradient(-45deg, transparent 75%, var(--ink) 75%) 0 0/10px 10px,
+      white;
+    border: 6px solid white;
+    box-shadow: 0 0 0 1px var(--line);
+    border-radius: 6px;
+  }
+  .info-note {
+    background: var(--polygon-soft);
+    border: 1px solid var(--polygon-light);
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--polygon-dark);
+    margin-bottom: 14px;
+  }
+  .info-note strong { font-weight: 700; }
+  .chain-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .chain-pill {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .chain-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .chain-pill .dot.poly { background: var(--polygon); }
+  .chain-pill .dot.eth { background: #627EEA; }
+  .chain-pill .dot.sol { background: #14F195; }
+  .chain-pill .dot.tron { background: #FF060A; }
+  .primary-btn {
+    background: var(--whish);
+    color: white;
+    border-radius: 100px;
+    padding: 14px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s;
+    border: none;
+    width: 100%;
+    font-family: inherit;
+  }
+  .primary-btn:hover { background: var(--whish-deep); }
+
+  /* PROCESSING SCREEN */
+  .processing-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .processing-sub {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .step-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    opacity: 0.35;
+    transition: opacity 0.3s ease;
+  }
+  .step-item.active { opacity: 1; }
+  .step-item.done { opacity: 1; }
+  .step-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #F5F5F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+  .step-item.active .step-indicator {
+    background: var(--polygon);
+    animation: pulse 1.4s infinite;
+  }
+  .step-item.done .step-indicator {
+    background: var(--success);
+  }
+  .step-indicator-inner {
+    width: 8px;
+    height: 8px;
+    background: var(--muted);
+    border-radius: 50%;
+  }
+  .step-item.active .step-indicator-inner {
+    background: white;
+  }
+  .step-item.done .step-indicator-inner {
+    background: white;
+    width: 12px;
+    height: 12px;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    position: relative;
+  }
+  .step-item.done .step-indicator-inner::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    top: -2px;
+    left: 2px;
+    transform: rotate(45deg);
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(130, 71, 229, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(130, 71, 229, 0); }
+  }
+  .step-content { flex: 1; padding-top: 1px; }
+  .step-name { font-size: 11px; font-weight: 700; color: var(--ink); }
+  .step-detail { font-size: 9px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+  /* CONFIRMATION SCREEN */
+  .confirm-icon-wrap { text-align: center; margin-bottom: 18px; margin-top: 10px; }
+  .confirm-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--success);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .confirm-amount {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -1px;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .confirm-amount-sub {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .confirm-message {
+    font-size: 13px;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .receipt {
+    background: #F9F9FB;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .receipt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 10px;
+  }
+  .receipt-label { color: var(--muted); }
+  .receipt-value { color: var(--ink); font-weight: 600; }
+
+  /* BANK FORM SCREEN */
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .form-value {
+    background: #F9F9FB;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .form-value.mono { font-family: 'DM Mono', monospace; }
+  .form-value.amount { font-size: 18px; }
+  .form-helper { font-size: 9px; color: var(--polygon-dark); margin-top: 4px; font-weight: 500; }
+  .rail-badge {
+    display: inline-block;
+    background: var(--success-light);
+    color: var(--success);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-left: 6px;
+  }
+
+  /* RIGHT SIDE - STEP NARRATIVE */
+  .narrative {
+    padding-top: 8px;
+  }
+  .step-counter {
+    display: inline-block;
+    background: white;
+    border: 1px solid var(--line);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  .narrative h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -1.2px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .narrative .body {
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 32px;
+    max-width: 580px;
+  }
+  .narrative .body strong { font-weight: 700; }
+  .narrative .body em { font-style: normal; color: var(--whish); font-weight: 600; }
+  .in-app-block {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    max-width: 580px;
+  }
+  .in-app-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--polygon);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .in-app-list { list-style: none; }
+  .in-app-list li {
+    font-size: 13px;
+    color: var(--ink);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line-soft);
+    line-height: 1.5;
+  }
+  .in-app-list li:last-child { border-bottom: none; }
+  .in-app-list li strong { font-weight: 700; }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    max-width: 580px;
+  }
+  .ctrl-btn {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.18s;
+  }
+  .ctrl-btn:hover:not(:disabled) {
+    border-color: var(--ink);
+  }
+  .ctrl-btn.primary {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .ctrl-btn.primary:hover:not(:disabled) {
+    background: black;
+  }
+  .ctrl-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .reset-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline;
+  }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    margin: 100px 0 60px;
+    text-align: center;
+  }
+  .section-divider-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--polygon);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .section-divider h2 {
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    max-width: 800px;
+    margin: 0 auto 18px;
+  }
+  .section-divider p {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* ARCHITECTURE CARDS */
+  .arch-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+  .arch-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 26px 22px;
+    position: relative;
+  }
+  .arch-card-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .arch-card-tag.live {
+    background: var(--success-light);
+    color: var(--success);
+  }
+  .arch-card-tag.new {
+    background: var(--polygon-light);
+    color: var(--polygon-dark);
+  }
+  .arch-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+  }
+  .arch-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* FLOW DIAGRAM */
+  .flow-section { margin-top: 64px; }
+  .flow-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--polygon);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .flow-diagram {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+    gap: 4px;
+    align-items: center;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px 24px;
+  }
+  .flow-node {
+    text-align: center;
+    padding: 16px 8px;
+  }
+  .flow-node-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--polygon-soft);
+    border: 1px solid var(--polygon-light);
+    border-radius: 12px;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .flow-node-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .flow-node-meta {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  .demo-footer {
+    margin-top: 100px;
+    padding: 40px 0;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+  .demo-footer strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .demo-grid { grid-template-columns: 1fr; }
+    .phone-wrap { position: static; margin-bottom: 40px; }
+    .arch-cards { grid-template-columns: 1fr 1fr; }
+    .flow-diagram { grid-template-columns: 1fr; gap: 12px; }
+    .flow-arrow { transform: rotate(90deg); }
+    .narrative h1 { font-size: 28px; }
+    .section-divider h2 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BANNER -->
+<div class="top-banner">
+  <div class="brand-marks">
+    <span class="brand-polygon">POLYGON</span>
+    <span class="brand-divider">×</span>
+    <span class="brand-whish">WHISH</span>
+  </div>
+  <div class="version-tag">Confidential v1.0 · JUN 2026</div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- DEMO GRID: Phone on left, Narrative on right -->
+  <div class="demo-grid">
+
+    <!-- PHONE -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>● ● ●</span>
+          </div>
+          <div id="phone-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NARRATIVE -->
+    <div class="narrative">
+      <div class="step-counter" id="step-counter">Step 1 of 9</div>
+      <h1 id="step-title">The Whish app home screen.</h1>
+      <div class="body" id="step-body"></div>
+      <div class="in-app-block">
+        <div class="in-app-eyebrow" id="step-eyebrow">In the app · Whish interface</div>
+        <ul class="in-app-list" id="step-list"></ul>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn" id="prev-btn">Previous</button>
+        <button class="reset-btn" id="reset-btn">↻ Reset demo</button>
+        <button class="ctrl-btn primary" id="next-btn">Next</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: How it works behind the scenes -->
+  <div class="section-divider">
+    <div class="section-divider-eyebrow">How it works behind the scenes</div>
+    <h2>One single new piece. The rest is already running.</h2>
+    <p>Whish serves the Lebanese diaspora and MENA corridor - users funding accounts from abroad to send money home. For them, this means any stable from any chain lands as a native USD balance, instantly, with no friction in the funding step. <strong>A single API surface - Polygon OMS - handles every flow: wallets, ramps, cross-chain, and payouts.</strong> Polygon Trails routes any stable from any chain to Polygon. The 1:1 WUSD Stable Swap is the only new piece - permissioned for Whish users, no spread, no fee. Anchorage handles issuance and Polygon handles self-custodial wallets through existing regulated infrastructure.</p>
+  </div>
+
+  <div class="arch-cards">
+    <div class="arch-card">
+      <span class="arch-card-tag live">Live today</span>
+      <h3>Trails Intent Address</h3>
+      <p>The smart contract that accepts any stable from any network and resolves the optimal route to Polygon. Already powering live cross-chain swaps across EVM, Solana, and Tron.</p>
+    </div>
+    <div class="arch-card">
+      <span class="arch-card-tag new">New for Whish</span>
+      <h3>1:1 WUSD Stable Swap</h3>
+      <p>A permissioned pool on Polygon that swaps any liquid stable (USDC, USDT) for WUSD at 1:1, with no spread or fee. Access restricted to KYC'd Whish users via OMS allowlist.</p>
+    </div>
+    <div class="arch-card">
+      <span class="arch-card-tag new">New for Whish</span>
+      <h3>Anchorage Digital Issuance</h3>
+      <p>WUSD <strong>(Whish Dollar)</strong> is issued by Anchorage Digital Bank - federally chartered (OCC), with T-Bill backed reserves. Mint and burn operations route through Anchorage's regulated infrastructure.</p>
+    </div>
+    <div class="arch-card">
+      <span class="arch-card-tag live">Live today</span>
+      <h3>Polygon Self-Custodial Wallets</h3>
+      <p>Whish uses Polygon's self-custodial wallet infrastructure for every end-user wallet - <strong>battle-tested in production with other partners, new deployment for Whish</strong>. AWS Nitro Enclave key management, social / email / passkey / OIDC sign-in, gas sponsored by Whish via Paymaster - Whish never holds user keys.</p>
+    </div>
+  </div>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow-section">
+    <div class="flow-title">End-to-end flow</div>
+    <div class="flow-diagram">
+      <div class="flow-node">
+        <div class="flow-node-icon">⟁</div>
+        <div class="flow-node-title">Any stable</div>
+        <div class="flow-node-meta">USDC · USDT<br>any chain</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-node">
+        <div class="flow-node-icon">⌖</div>
+        <div class="flow-node-title">Trails intent</div>
+        <div class="flow-node-meta">unique address<br>valid 5 min</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-node">
+        <div class="flow-node-icon">⇄</div>
+        <div class="flow-node-title">1:1 WUSD Swap</div>
+        <div class="flow-node-meta">permissioned<br>no spread</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-node">
+        <div class="flow-node-icon">⛁</div>
+        <div class="flow-node-title">Anchorage mint</div>
+        <div class="flow-node-meta">T-Bill backed<br>reserves</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-node">
+        <div class="flow-node-icon">⌂</div>
+        <div class="flow-node-title">User's Polygon wallet</div>
+        <div class="flow-node-meta">self-custodial<br>gas sponsored</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-footer">
+    Prepared by <strong>Polygon Labs</strong> for Whish · CONFIDENTIAL · V1.0 · JUN 2026
+  </div>
+
+</div>
+
+<script>
+// Demo state
+let currentStep = 1;
+const TOTAL_STEPS = 9;
+const USER_NAME = "Toufic Koussa";
+
+// Step definitions
+const STEPS = {
+  1: {
+    title: "The Whish app home screen.",
+    body: `Toufic opens Whish. He sees his <strong>WUSD balance</strong> and three core actions: <strong>Add Money</strong>, <strong>Whish 2 Whish</strong>, <strong>Transfer</strong>. He has 50 USDT on Ethereum that he wants to bring into Whish. He taps <em>Add Money</em>.`,
+    eyebrow: "In the app · Whish interface",
+    items: [
+      "<strong>WUSD balance</strong> shown as a native dollar balance - no separate crypto screen.",
+      "All actions use the same UX pattern Whish users already know.",
+      "<strong>Self-custodial wallet</strong> provisioned at onboarding via <strong>Polygon's infrastructure</strong> (<a href='https://docs.polygon.technology/wallets/non-custodial-wallets' target='_blank' style='color:var(--polygon);text-decoration:underline;'>docs</a>) - new capability, sits alongside Whish's existing neobank stack.",
+      "<em>Note:</em> <strong>Whish 2 Whish</strong> is a separate native P2P feature (phone-to-phone WUSD transfers between Whish users) - not covered in this demo."
+    ],
+    screen: 'home'
+  },
+  2: {
+    title: "Every funding rail in one menu.",
+    body: `Toufic sees the full set of on-ramps grouped by category - <strong>Bank & Cash</strong>, <strong>Crypto</strong>, <strong>Card & Wallet</strong>. Each option would route to a different OMS module behind the scenes. He picks <em>Receive USDT</em>.`,
+    eyebrow: "In the app · Whish interface",
+    items: [
+      "Cash deposits via <strong>Western Union</strong> agent network (50,000+ US locations).",
+      "Wire and ACH via dedicated <strong>virtual accounts</strong> (CRB or Lead Bank).",
+      "Cross-chain crypto across <strong>Polygon, Ethereum, Solana, Tron</strong>.",
+      "Card top-up via AFT; digital wallets via Apple Pay / Google Pay."
+    ],
+    screen: 'addmoney'
+  },
+  3: {
+    title: "A unique address, any chain, instant routing.",
+    body: `The app shows a <strong>Trails Intent Address</strong> - a unique address for this deposit, valid for 5 minutes. Behind it: a smart contract on Polygon that knows exactly what to do with whatever stable arrives. The conversion to WUSD is <em>1:1</em>, with no spread.`,
+    eyebrow: "Polygon Trails · Intent Address",
+    items: [
+      "Address generated via <strong>POST /intents</strong> on the Trails API with WUSD destination pre-configured.",
+      "<strong>Account abstraction smart contract</strong> encodes the whole flow as a merkle hash - non-custodial.",
+      "Trails detects USDT, USDC, or any other liquid stable arriving on any supported chain (Polygon, Ethereum, Solana, Tron).",
+      "The <strong>5-min window</strong> is the quote window; after that, the address expires and funds return automatically."
+    ],
+    screen: 'receive_address'
+  },
+  4: {
+    title: "What happens behind the scenes.",
+    body: `Toufic sends 50 USDT from his external wallet on Ethereum. Trails detects the deposit, bridges to Polygon, and routes through the <strong>1:1 Stable Swap pool</strong>. The pool returns exactly <strong>50 WUSD</strong> - no spread, no fee.`,
+    eyebrow: "Trails Routing · 4 Steps",
+    items: [
+      "<strong>1. Detection:</strong> USDT arrives on Ethereum at the intent address. ~12s for the block to confirm if on Ethereum.",
+      "<strong>2. Bridge:</strong> Trails routes USDT from Ethereum to Polygon via best-route bridging. ~15s.",
+      "<strong>3. Swap:</strong> Routes through the 1:1 USDT → WUSD permissioned pool. Sub-bp slippage.",
+      "<strong>4. Delivery:</strong> WUSD lands in Toufic's Polygon self-custodial wallet. Webhook fires to Whish."
+    ],
+    screen: 'processing_in'
+  },
+  5: {
+    title: "Funds available immediately.",
+    body: `Within seconds, Toufic's <strong>WUSD balance</strong> updates. No spread, no fee, no cross-chain UX friction. From his perspective, he just received <em>50 dollars</em>. From Whish's perspective: <em>one webhook fired</em>.`,
+    eyebrow: "Whish Backend · Webhook integration",
+    items: [
+      "WUSD arrives in Toufic's <strong>Polygon self-custodial wallet</strong> - confirmed on-chain.",
+      "<strong>Webhook POST /deposits/confirmed</strong> fires to Whish backend the moment WUSD lands.",
+      "All complexity sits on the Polygon side - Whish integrates a single webhook to credit user balances."
+    ],
+    screen: 'received'
+  },
+  6: {
+    title: "Multi-rail off-ramps. Pick the destination, not the plumbing.",
+    body: `Now Toufic wants to send 50 USD to his US bank account. He taps <strong>Transfer</strong>, then sees the off-ramp menu. Bank, crypto wallet, digital wallet, cash payout, or push-to-card - each routes through a different rail, same UX. He picks <em>Bank Account</em>.`,
+    eyebrow: "In the app · Whish interface",
+    items: [
+      "<strong>Bank Account</strong> payouts via SWIFT wire (international), Wire, or ACH.",
+      "<strong>EU SEPA</strong> payouts roadmap-tied to Polygon's MiCA license.",
+      "<strong>Cash payout</strong> via WU agent (used heavily on remittance corridors).",
+      "<strong>Push-to-card</strong> (OCT) for instant card payout."
+    ],
+    screen: 'sendmoney'
+  },
+  7: {
+    title: "SWIFT wire to a Lebanese bank - no fiat held by Whish.",
+    body: `Toufic enters his bank details. Whish processes the payout as <strong>WUSD → USDT → SWIFT</strong> through Polygon's OCC-chartered banking partner. Whish never holds the fiat directly.`,
+    eyebrow: "In the app · Whish interface",
+    items: [
+      "<strong>Account holder + IBAN + SWIFT/BIC</strong> - international wire format for Lebanese banks.",
+      "<strong>SWIFT wire</strong> default (~10 min via Polygon's payout rail), ACH / Wire available for US destinations.",
+      "Recipient gets <strong>exactly $50.00 USD</strong> - 1:1 conversion from WUSD, no spread."
+    ],
+    screen: 'sendbank'
+  },
+  8: {
+    title: "The reverse flow. Same plumbing, in reverse.",
+    body: `The reverse of the deposit flow. <strong>WUSD → USDT</strong> via the Stable Swap (same pool, reverse direction), then <strong>USDT → USD</strong> through Polygon's <strong>OCC-chartered banking partner</strong>, SWIFT'd to Toufic's Lebanese bank. Whish never holds the fiat directly.`,
+    eyebrow: "Polygon OMS · Behind the scenes",
+    items: [
+      "<strong>1. WUSD → USDT:</strong> 1:1 Stable Swap (same pool, reverse direction).",
+      "<strong>2. Routing via Polygon OMS:</strong> Payout instructed via API.",
+      "<strong>3. USDT → USD:</strong> OCC partner bank - no fiat held by Whish.",
+      "<strong>4. SWIFT wire to bank ••6789:</strong> International rails - ACH / Wire for US destinations.",
+      "<em>Design choice for outbound:</em> (a) WUSD redeemed at Anchorage before SWIFT payout (full regulatory closure), or (b) WUSD swapped 1:1 back to USDT via the same pool with no Anchorage burn (OCC partner handles USDT → USD settlement). Different regulatory postures - Whish and Polygon to align."
+    ],
+    screen: 'processing_out'
+  },
+  9: {
+    title: "On its way.",
+    body: `Done. SWIFT typically arrives in <strong>~10 minutes via Polygon's payout rail</strong>, with standard SWIFT as the fallback. End-to-end, the entire flow - receive USDT cross-chain, settle to Lebanese bank - completed without any manual reconciliation or fiat held by Whish.`,
+    eyebrow: "Recap · what just happened",
+    items: [
+      "<strong>Inbound:</strong> 50 USDT from Ethereum → WUSD in Toufic's Polygon wallet (seconds).",
+      "<strong>Outbound:</strong> 50 WUSD → USD in Toufic's Lebanese bank (~10 min via SWIFT).",
+      "Zero spread, zero conversion fees, no native token exposure.",
+      "Single API surface (Polygon OMS) handled every step - wallets, ramps, cross-chain, payouts."
+    ],
+    screen: 'sent'
+  }
+};
+
+// SCREEN RENDERERS
+const SCREENS = {
+  home: () => `
+    <div class="screen-body">
+      <div class="home-greeting">Account</div>
+      <div class="home-name">${USER_NAME}</div>
+      <div class="balance-card">
+        <div class="balance-label">WUSD balance</div>
+        <div class="balance-amount">$0.00</div>
+        <div class="balance-sub">Whish Dollar · 1 WUSD = 1 USD</div>
+        <div class="home-actions">
+          <div class="home-action"><span class="home-action-icon">+</span>Add Money</div>
+          <div class="home-action"><span class="home-action-icon">W</span>Whish 2 Whish</div>
+          <div class="home-action"><span class="home-action-icon">↗</span>Transfer</div>
+        </div>
+      </div>
+      <div class="activity-section">
+        <div class="activity-label">Recent activity</div>
+        <div class="activity-row">
+          <div class="activity-icon wusd">W</div>
+          <div class="activity-text">
+            <div class="activity-title">Whish Dollar (WUSD)</div>
+            <div class="activity-meta">Ready to receive</div>
+          </div>
+          <div class="activity-amount neutral">-</div>
+        </div>
+      </div>
+    </div>
+  `,
+  addmoney: () => `
+    <div class="screen-header">
+      <div class="screen-back">‹</div>
+      <div class="screen-title">Add Money</div>
+    </div>
+    <div class="screen-body" style="overflow-y: auto;">
+      <div class="menu-group">Bank & Cash</div>
+      <div class="menu-item">
+        <div class="menu-item-icon">$</div>
+        <div class="menu-item-text"><div class="menu-item-title">Cash Deposit</div><div class="menu-item-sub">Western Union · 50k+ locations</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-icon">⛁</div>
+        <div class="menu-item-text"><div class="menu-item-title">Wire / ACH</div><div class="menu-item-sub">Your US virtual account</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-group">Crypto</div>
+      <div class="menu-item" style="border: 2px solid var(--whish); background: var(--whish-light);">
+        <div class="menu-item-icon">₮</div>
+        <div class="menu-item-text"><div class="menu-item-title">Receive USDT</div><div class="menu-item-sub">Polygon · Ethereum · Solana · Tron</div></div>
+        <div class="menu-item-arrow" style="color: var(--whish);">›</div>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-icon">©</div>
+        <div class="menu-item-text"><div class="menu-item-title">Receive USDC</div><div class="menu-item-sub">Polygon · Ethereum · Solana · Tron</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-group">Card & Wallet</div>
+      <div class="menu-item">
+        <div class="menu-item-icon">▭</div>
+        <div class="menu-item-text"><div class="menu-item-title">Top up via Card</div><div class="menu-item-sub">Visa · Mastercard (AFT)</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-icon">◫</div>
+        <div class="menu-item-text"><div class="menu-item-title">Digital Wallets</div><div class="menu-item-sub">Apple Pay · Google Pay</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+    </div>
+  `,
+  receive_address: () => `
+    <div class="screen-header">
+      <div class="screen-back">‹</div>
+      <div class="screen-title">Receive USDT</div>
+    </div>
+    <div class="screen-body">
+      <div class="receive-prompt">Send <strong>USDT or USDC</strong> from any supported chain. <strong>1:1 conversion to WUSD</strong> - no spread, no fee.</div>
+      <div class="address-card">
+        <div class="qr-mini"></div>
+        <div class="address-value">0x1ecf1d63…85c5d554</div>
+        <div class="address-copy">Tap to copy</div>
+      </div>
+      <div class="chain-pills">
+        <div class="chain-pill"><span class="dot poly"></span>Polygon</div>
+        <div class="chain-pill"><span class="dot eth"></span>Ethereum</div>
+        <div class="chain-pill"><span class="dot sol"></span>Solana</div>
+        <div class="chain-pill"><span class="dot tron"></span>Tron</div>
+      </div>
+      <div class="info-note">
+        <strong>Automatic 1:1 conversion.</strong> Unique address, valid for 5 min. Generated by Polygon Trails - any source chain resolves to WUSD on Polygon.
+      </div>
+      <button class="primary-btn" onclick="advanceStep()">Simulate deposit (50 USDT)</button>
+    </div>
+  `,
+  processing_in: () => `
+    <div class="screen-header">
+      <div class="screen-title">Processing</div>
+    </div>
+    <div class="screen-body">
+      <div class="processing-title">Receiving your deposit</div>
+      <div class="processing-sub">50 USDT incoming from Ethereum network</div>
+      <div class="step-list" id="proc-in-steps">
+        <div class="step-item" data-idx="0">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">USDT detected on Ethereum</div>
+            <div class="step-detail">0x4f2a…b81d · Block confirmed</div>
+          </div>
+        </div>
+        <div class="step-item" data-idx="1">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">Routing via Trails to Polygon</div>
+            <div class="step-detail">Trails best-route bridge · ~8s remaining (ETH block ~15s total). If Polygon→Polygon, Trails interop not needed - USDT swap to WUSD is instant.</div>
+          </div>
+        </div>
+        <div class="step-item" data-idx="2">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">1:1 conversion USDT → WUSD</div>
+            <div class="step-detail">Stable Swap pool · permissioned</div>
+          </div>
+        </div>
+        <div class="step-item" data-idx="3">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">Crediting to your Polygon wallet</div>
+            <div class="step-detail">Self-custodial · OMS webhook</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  received: () => `
+    <div class="screen-header">
+      <div class="screen-title">Received</div>
+    </div>
+    <div class="screen-body">
+      <div class="confirm-icon-wrap">
+        <div class="confirm-icon">✓</div>
+      </div>
+      <div class="confirm-amount">50.00 WUSD</div>
+      <div class="confirm-amount-sub">Equivalent to US$ 50.00</div>
+      <div class="confirm-message">Received!</div>
+      <div class="receipt">
+        <div class="receipt-row"><span class="receipt-label">Source</span><span class="receipt-value">50 USDT · Ethereum</span></div>
+        <div class="receipt-row"><span class="receipt-label">Conversion</span><span class="receipt-value">1:1 (no spread)</span></div>
+        <div class="receipt-row"><span class="receipt-label">Fee</span><span class="receipt-value">US$ 0.00</span></div>
+        <div class="receipt-row"><span class="receipt-label">Time</span><span class="receipt-value">~12 seconds</span></div>
+      </div>
+      <button class="primary-btn" onclick="advanceStep()">Send WUSD →</button>
+    </div>
+  `,
+  sendmoney: () => `
+    <div class="screen-header">
+      <div class="screen-back">‹</div>
+      <div class="screen-title">Send Money</div>
+    </div>
+    <div class="screen-body" style="overflow-y: auto;">
+      <div class="menu-prompt">Where do you want to send your <strong>WUSD</strong>?</div>
+      <div class="menu-group">Bank & Cash</div>
+      <div class="menu-item" style="border: 2px solid var(--whish); background: var(--whish-light);">
+        <div class="menu-item-icon">⛁</div>
+        <div class="menu-item-text"><div class="menu-item-title">Bank Account</div><div class="menu-item-sub">SWIFT · Wire · ACH</div></div>
+        <div class="menu-item-arrow" style="color: var(--whish);">›</div>
+      </div>
+      <div class="menu-item future">
+        <div class="menu-item-icon">⛁</div>
+        <div class="menu-item-text"><div class="menu-item-title">EU Bank Account</div><div class="menu-item-sub">SEPA · MiCA roadmap</div></div>
+        <div class="menu-item-badge">Q3/Q4</div>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-icon">$</div>
+        <div class="menu-item-text"><div class="menu-item-title">Cash Pickup</div><div class="menu-item-sub">Western Union agent</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-group">Crypto</div>
+      <div class="menu-item">
+        <div class="menu-item-icon">₿</div>
+        <div class="menu-item-text"><div class="menu-item-title">External Crypto Wallet</div><div class="menu-item-sub">Any chain · any address</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-group">Card & Wallet</div>
+      <div class="menu-item">
+        <div class="menu-item-icon">▭</div>
+        <div class="menu-item-text"><div class="menu-item-title">Push to Card</div><div class="menu-item-sub">Instant · OCT</div></div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+    </div>
+  `,
+  sendbank: () => `
+    <div class="screen-header">
+      <div class="screen-back">‹</div>
+      <div class="screen-title">Bank Account</div>
+    </div>
+    <div class="screen-body">
+      <div class="form-group">
+        <div class="form-label">You send</div>
+        <div class="form-value amount">50.00 WUSD</div>
+        <div class="form-helper">→ recipient gets <strong>exactly $50.00 USD</strong> · 1:1, no spread</div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Account holder</div>
+        <div class="form-value">${USER_NAME}</div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">IBAN</div>
+        <div class="form-value mono">LB37 0010 0000 0000 0000 1234 6789</div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">BIC / SWIFT</div>
+        <div class="form-value mono">BAUDLBBX</div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Bank</div>
+        <div class="form-value">Bank Audi · Beirut, Lebanon</div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Rail</div>
+        <div class="form-value">SWIFT wire <span class="rail-badge">~10 min</span></div>
+      </div>
+      <button class="primary-btn" onclick="advanceStep()">Send $50.00 to bank</button>
+    </div>
+  `,
+  processing_out: () => `
+    <div class="screen-header">
+      <div class="screen-title">Withdraw to bank</div>
+    </div>
+    <div class="screen-body">
+      <div class="processing-title">Sending to your bank</div>
+      <div class="processing-sub">50 WUSD → Lebanese bank ••6789 · SWIFT</div>
+      <div class="step-list" id="proc-out-steps">
+        <div class="step-item" data-idx="0">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">WUSD → USDT</div>
+            <div class="step-detail">1:1 Stable Swap · same pool, reverse</div>
+          </div>
+        </div>
+        <div class="step-item" data-idx="1">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">Routing via Polygon OMS</div>
+            <div class="step-detail">Payout instructed via API</div>
+          </div>
+        </div>
+        <div class="step-item" data-idx="2">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">USDT → USD</div>
+            <div class="step-detail">OCC partner bank · no fiat held</div>
+          </div>
+        </div>
+        <div class="step-item" data-idx="3">
+          <div class="step-indicator"><div class="step-indicator-inner"></div></div>
+          <div class="step-content">
+            <div class="step-name">SWIFT wire to bank ••6789</div>
+            <div class="step-detail">International rails · ACH / Wire for US</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  sent: () => `
+    <div class="screen-header">
+      <div class="screen-title">Sent</div>
+    </div>
+    <div class="screen-body">
+      <div class="confirm-icon-wrap">
+        <div class="confirm-icon">✓</div>
+      </div>
+      <div class="confirm-amount">50.00 USD</div>
+      <div class="confirm-amount-sub">Arriving in your bank account</div>
+      <div class="confirm-message">On its way!</div>
+      <div class="receipt">
+        <div class="receipt-row"><span class="receipt-label">Destination</span><span class="receipt-value">Lebanese bank ••6789</span></div>
+        <div class="receipt-row"><span class="receipt-label">Rail</span><span class="receipt-value">SWIFT · OCC partner</span></div>
+        <div class="receipt-row"><span class="receipt-label">Conversion</span><span class="receipt-value">1:1 (no spread)</span></div>
+        <div class="receipt-row"><span class="receipt-label">Est. arrival</span><span class="receipt-value">~10 minutes</span></div>
+      </div>
+      <button class="primary-btn" onclick="resetDemo()">Back to account</button>
+    </div>
+  `
+};
+
+// RENDERING
+function renderStep() {
+  const step = STEPS[currentStep];
+
+  // Update narrative
+  document.getElementById('step-counter').textContent = `Step ${currentStep} of ${TOTAL_STEPS}`;
+  document.getElementById('step-title').innerHTML = step.title;
+  document.getElementById('step-body').innerHTML = step.body;
+  document.getElementById('step-eyebrow').textContent = step.eyebrow;
+
+  const listEl = document.getElementById('step-list');
+  listEl.innerHTML = step.items.map(item => `<li>${item}</li>`).join('');
+
+  // Update phone screen
+  document.getElementById('phone-content').innerHTML = SCREENS[step.screen]();
+
+  // Handle processing animations
+  if (step.screen === 'processing_in') {
+    animateProcessingSteps('proc-in-steps');
+  } else if (step.screen === 'processing_out') {
+    animateProcessingSteps('proc-out-steps');
+  }
+
+  // Update controls
+  document.getElementById('prev-btn').disabled = currentStep === 1;
+  document.getElementById('next-btn').disabled = currentStep === TOTAL_STEPS;
+  document.getElementById('next-btn').textContent = currentStep === TOTAL_STEPS ? 'Done' : 'Next';
+}
+
+function animateProcessingSteps(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const items = container.querySelectorAll('.step-item');
+
+  items.forEach((item, idx) => {
+    // Activate one at a time, then mark done
+    setTimeout(() => {
+      // Mark previous as done
+      if (idx > 0) {
+        items[idx - 1].classList.remove('active');
+        items[idx - 1].classList.add('done');
+      }
+      // Mark current as active
+      item.classList.add('active');
+    }, idx * 900);
+  });
+
+  // Mark final as done after all complete
+  setTimeout(() => {
+    items[items.length - 1].classList.remove('active');
+    items[items.length - 1].classList.add('done');
+  }, items.length * 900);
+}
+
+function advanceStep() {
+  if (currentStep < TOTAL_STEPS) {
+    currentStep++;
+    renderStep();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function previousStep() {
+  if (currentStep > 1) {
+    currentStep--;
+    renderStep();
+  }
+}
+
+function resetDemo() {
+  currentStep = 1;
+  renderStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('next-btn').addEventListener('click', advanceStep);
+document.getElementById('prev-btn').addEventListener('click', previousStep);
+document.getElementById('reset-btn').addEventListener('click', resetDemo);
+
+// Initial render
+renderStep();
+</script>
+
+</body>
+</html>
