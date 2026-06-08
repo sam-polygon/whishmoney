@@ -871,7 +871,7 @@
   <div class="section-divider">
     <div class="section-divider-eyebrow">How it works behind the scenes</div>
     <h2>One single new piece. The rest is already running.</h2>
-    <p>Whish serves the Lebanese diaspora and MENA corridor - users funding accounts from abroad to send money home. For them, this means any stable from any chain lands as a native USD balance, instantly, with no friction in the funding step. <strong>A single API surface - Polygon OMS - handles every flow: wallets, ramps, cross-chain, and payouts.</strong> Polygon Trails routes any stable from any chain to Polygon. The 1:1 WUSD Stable Swap is the only new piece - permissioned for Whish users, no spread, no fee. Anchorage handles issuance and Polygon handles self-custodial wallets through existing regulated infrastructure.</p>
+    <p>Whish provides neobank experiences to Lebanese and MENA users. We are now providing USD access via stablecoins. <strong>A single API surface - Polygon OMS - handles every flow: wallets, ramps, cross-chain, and payouts.</strong> Polygon Trails routes any stable from any chain to Polygon. The 1:1 WUSD Stable Swap is the only new piece - permissioned for Whish users. Anchorage handles issuance and Polygon handles self-custodial wallets through existing regulated infrastructure.</p>
   </div>
 
   <div class="arch-cards">
@@ -883,7 +883,7 @@
     <div class="arch-card">
       <span class="arch-card-tag new">New for Whish</span>
       <h3>1:1 WUSD Stable Swap</h3>
-      <p>A permissioned pool on Polygon that swaps any liquid stable (USDC, USDT) for WUSD at 1:1, with no spread or fee. Access restricted to KYC'd Whish users via OMS allowlist.</p>
+      <p>A permissioned pool on Polygon that swaps any liquid stable (USDC, USDT) for WUSD at 1:1. Access restricted to KYC'd Whish users via OMS allowlist.</p>
     </div>
     <div class="arch-card">
       <span class="arch-card-tag new">New for Whish</span>
@@ -910,13 +910,13 @@
       <div class="flow-node">
         <div class="flow-node-icon">⌖</div>
         <div class="flow-node-title">Trails intent</div>
-        <div class="flow-node-meta">unique address<br>valid 5 min</div>
+        <div class="flow-node-meta">abstracts all<br>cross-chain activity</div>
       </div>
       <div class="flow-arrow">›</div>
       <div class="flow-node">
         <div class="flow-node-icon">⇄</div>
         <div class="flow-node-title">1:1 WUSD Swap</div>
-        <div class="flow-node-meta">permissioned<br>no spread</div>
+        <div class="flow-node-meta">permissioned<br>Whish-only</div>
       </div>
       <div class="flow-arrow">›</div>
       <div class="flow-node">
@@ -973,7 +973,7 @@ const STEPS = {
   },
   3: {
     title: "A unique address, any chain, instant routing.",
-    body: `The app shows a <strong>Trails Intent Address</strong> - a unique address for this deposit, valid for 5 minutes. Behind it: a smart contract on Polygon that knows exactly what to do with whatever stable arrives. The conversion to WUSD is <em>1:1</em>, with no spread.`,
+    body: `The app shows a <strong>Trails Intent Address</strong> - a unique address for this deposit, valid for 5 minutes. Behind it: a smart contract on Polygon that knows exactly what to do with whatever stable arrives. The conversion to WUSD is <em>1:1</em>.`,
     eyebrow: "Polygon Trails · Intent Address",
     items: [
       "Address generated via <strong>POST /intents</strong> on the Trails API with WUSD destination pre-configured.",
@@ -985,7 +985,7 @@ const STEPS = {
   },
   4: {
     title: "What happens behind the scenes.",
-    body: `Toufic sends 50 USDT from his external wallet on Ethereum. Trails detects the deposit, bridges to Polygon, and routes through the <strong>1:1 Stable Swap pool</strong>. The pool returns exactly <strong>50 WUSD</strong> - no spread, no fee.`,
+    body: `Toufic sends 50 USDT from his external wallet on Ethereum. Trails detects the deposit, bridges to Polygon, and routes through the <strong>1:1 Stable Swap pool</strong>. The pool returns exactly <strong>50 WUSD</strong>.`,
     eyebrow: "Trails Routing · 4 Steps",
     items: [
       "<strong>1. Detection:</strong> USDT arrives on Ethereum at the intent address. ~12s for the block to confirm if on Ethereum.",
@@ -997,7 +997,7 @@ const STEPS = {
   },
   5: {
     title: "Funds available immediately.",
-    body: `Within seconds, Toufic's <strong>WUSD balance</strong> updates. No spread, no fee, no cross-chain UX friction. From his perspective, he just received <em>50 dollars</em>. From Whish's perspective: <em>one webhook fired</em>.`,
+    body: `Within seconds, Toufic's <strong>WUSD balance</strong> updates. No cross-chain UX friction. From his perspective, he just received <em>50 dollars</em>. From Whish's perspective: <em>one webhook fired</em>.`,
     eyebrow: "Whish Backend · Webhook integration",
     items: [
       "WUSD arrives in Toufic's <strong>Polygon self-custodial wallet</strong> - confirmed on-chain.",
@@ -1025,7 +1025,7 @@ const STEPS = {
     items: [
       "<strong>Account holder + IBAN + SWIFT/BIC</strong> - international wire format for Lebanese banks.",
       "<strong>SWIFT wire</strong> default (~10 min via Polygon's payout rail), ACH / Wire available for US destinations.",
-      "Recipient gets <strong>exactly $50.00 USD</strong> - 1:1 conversion from WUSD, no spread."
+      "Recipient gets <strong>exactly $50.00 USD</strong> - 1:1 conversion from WUSD."
     ],
     screen: 'sendbank'
   },
@@ -1049,7 +1049,7 @@ const STEPS = {
     items: [
       "<strong>Inbound:</strong> 50 USDT from Ethereum → WUSD in Toufic's Polygon wallet (seconds).",
       "<strong>Outbound:</strong> 50 WUSD → USD in Toufic's Lebanese bank (~10 min via SWIFT).",
-      "Zero spread, zero conversion fees, no native token exposure.",
+      "No native token exposure - users see only USD-denominated balances and fees.",
       "Single API surface (Polygon OMS) handled every step - wallets, ramps, cross-chain, payouts."
     ],
     screen: 'sent'
@@ -1132,7 +1132,7 @@ const SCREENS = {
       <div class="screen-title">Receive USDT</div>
     </div>
     <div class="screen-body">
-      <div class="receive-prompt">Send <strong>USDT or USDC</strong> from any supported chain. <strong>1:1 conversion to WUSD</strong> - no spread, no fee.</div>
+      <div class="receive-prompt">Send <strong>USDT or USDC</strong> from any supported chain. <strong>1:1 conversion to WUSD</strong>.</div>
       <div class="address-card">
         <div class="qr-mini"></div>
         <div class="address-value">0x1ecf1d63…85c5d554</div>
@@ -1202,8 +1202,7 @@ const SCREENS = {
       <div class="confirm-message">Received!</div>
       <div class="receipt">
         <div class="receipt-row"><span class="receipt-label">Source</span><span class="receipt-value">50 USDT · Ethereum</span></div>
-        <div class="receipt-row"><span class="receipt-label">Conversion</span><span class="receipt-value">1:1 (no spread)</span></div>
-        <div class="receipt-row"><span class="receipt-label">Fee</span><span class="receipt-value">US$ 0.00</span></div>
+        <div class="receipt-row"><span class="receipt-label">Conversion</span><span class="receipt-value">1:1</span></div>
         <div class="receipt-row"><span class="receipt-label">Time</span><span class="receipt-value">~12 seconds</span></div>
       </div>
       <button class="primary-btn" onclick="advanceStep()">Send WUSD →</button>
@@ -1255,7 +1254,7 @@ const SCREENS = {
       <div class="form-group">
         <div class="form-label">You send</div>
         <div class="form-value amount">50.00 WUSD</div>
-        <div class="form-helper">→ recipient gets <strong>exactly $50.00 USD</strong> · 1:1, no spread</div>
+        <div class="form-helper">→ recipient gets <strong>exactly $50.00 USD</strong> · 1:1</div>
       </div>
       <div class="form-group">
         <div class="form-label">Account holder</div>
@@ -1333,7 +1332,7 @@ const SCREENS = {
       <div class="receipt">
         <div class="receipt-row"><span class="receipt-label">Destination</span><span class="receipt-value">Lebanese bank ••6789</span></div>
         <div class="receipt-row"><span class="receipt-label">Rail</span><span class="receipt-value">SWIFT · OCC partner</span></div>
-        <div class="receipt-row"><span class="receipt-label">Conversion</span><span class="receipt-value">1:1 (no spread)</span></div>
+        <div class="receipt-row"><span class="receipt-label">Conversion</span><span class="receipt-value">1:1</span></div>
         <div class="receipt-row"><span class="receipt-label">Est. arrival</span><span class="receipt-value">~10 minutes</span></div>
       </div>
       <button class="primary-btn" onclick="resetDemo()">Back to account</button>
